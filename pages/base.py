@@ -1,12 +1,29 @@
 #!/usr/bin/python3
 # -*- encoding=utf8 -*-
-
+import json
 import time
 from termcolor import colored
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+
+def wait_for_animation(web_driver, selector):
+    """
+    Waits until jQuery animations have finished for the given jQuery  selector.
+    """
+    WebDriverWait(web_driver, 10).until(lambda web_browser: web_driver.execute_script(
+        'return jQuery(%s).is(":animated")' % json.dumps(selector)) == False)
+
+
+def wait_for_ajax_loading(web_driver, class_name):
+    """
+    Waits until the ajax loading indicator disappears.
+    """
+    WebDriverWait(web_driver, 10).until(lambda web_driver: len(web_driver.find_elements(
+        By.CLASS_NAME,class_name)) == 0)
+
 
 
 class WebPage(object):
